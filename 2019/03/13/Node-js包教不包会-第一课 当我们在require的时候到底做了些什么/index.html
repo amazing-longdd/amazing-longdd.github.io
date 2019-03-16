@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="富强、民主、文明、和谐、自由、平等、公正、法治、爱国、敬业、诚信、友善。">
+<meta name="description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。但是Node与js的关系一直没有去深究，直到近来看了朴灵这本《深入浅出Node.js》之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方">
 <meta name="keywords" content="iOS ES6 Node.js Vue React Cocos2dx">
-<meta property="og:type" content="website">
-<meta property="og:title" content="二狗的故事会">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
+<meta property="og:url" content="http://yoursite.com/2019/03/13/Node-js包教不包会-第一课 当我们在require的时候到底做了些什么/index.html">
 <meta property="og:site_name" content="二狗的故事会">
-<meta property="og:description" content="富强、民主、文明、和谐、自由、平等、公正、法治、爱国、敬业、诚信、友善。">
+<meta property="og:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。但是Node与js的关系一直没有去深究，直到近来看了朴灵这本《深入浅出Node.js》之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg">
+<meta property="og:updated_time" content="2019-03-16T11:19:04.707Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="二狗的故事会">
-<meta name="twitter:description" content="富强、民主、文明、和谐、自由、平等、公正、法治、爱国、敬业、诚信、友善。">
+<meta name="twitter:title" content="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
+<meta name="twitter:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。但是Node与js的关系一直没有去深究，直到近来看了朴灵这本《深入浅出Node.js》之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方">
+<meta name="twitter:image" content="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/13/Node-js包教不包会-第一课 当我们在require的时候到底做了些什么/">
 
 
 
 
 
-  <title>二狗的故事会</title>
+  <title>Node.js包教不包会 第一课 当我们在require的时候到底做了些什么 | 二狗的故事会</title>
   
 
 
@@ -144,8 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -218,9 +220,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -250,9 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/13/Node-js包教不包会-第一课 当我们在require的时候到底做了些什么/" itemprop="url">Node.js包教不包会 第一课 当我们在require的时候到底做了些什么</a></h1>
+          <h1 class="post-title" itemprop="name headline">Node.js包教不包会 第一课 当我们在require的时候到底做了些什么</h1>
         
 
         <div class="post-meta">
@@ -302,9 +302,7 @@
       
 
       
-        
-          
-            <h1 id="一、Node-js与JavaScript的关系"><a href="#一、Node-js与JavaScript的关系" class="headerlink" title="一、Node.js与JavaScript的关系"></a>一、Node.js与JavaScript的关系</h1><p>刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。但是Node与js的关系一直没有去深究，直到近来看了朴灵这本《深入浅出Node.js》之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：</p>
+        <h1 id="一、Node-js与JavaScript的关系"><a href="#一、Node-js与JavaScript的关系" class="headerlink" title="一、Node.js与JavaScript的关系"></a>一、Node.js与JavaScript的关系</h1><p>刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。但是Node与js的关系一直没有去深究，直到近来看了朴灵这本《深入浅出Node.js》之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：</p>
 <ol>
 <li>ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、方法、对象等基本要素。</li>
 <li>CommonJS ： 一种新的规范。当HTML5出现之后，js运用范围不仅仅是操作DOM、BOM，因为js自身没有模块系统的概念，也没有文件操作、IO流这些标准API以及数据库的接口。所以CommonJS的出现才使得js能真正的运用在服务器开发。<br><img src="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></li>
@@ -349,8 +347,6 @@
 </li>
 </ul>
 
-          
-        
       
     </div>
     
@@ -367,137 +363,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/27/写在最前面的话/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Young">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二狗的故事会">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/27/写在最前面的话/" itemprop="url">写在最前面的话</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-27T20:45:03+08:00">
-                2019-02-27
-              </time>
+              <a href="/2019/02/27/写在最前面的话/" rel="next" title="写在最前面的话">
+                <i class="fa fa-chevron-left"></i> 写在最前面的话
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p><img src="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1551282198397&amp;di=c7c13f36f0ff4f349d7b141ab5364583&amp;imgtype=0&amp;src=http%3A%2F%2Fimg838.ph.126.net%2FhAARPCAKhgTlsqp1WDOX6Q%3D%3D%2F817121857392125237.jpg" alt></p>
-<blockquote>
-<p>这个blog主要是想把自己之前存下来的笔记好好再整理一下，顺便督促自己定期总结学一些东西，大概先列一下接下来会写的东西的种类！</p>
-</blockquote>
-<h2 id="1-关于iOS开发的笔记（Objective-C-与-Swift），目的在于对平时开发的总结。"><a href="#1-关于iOS开发的笔记（Objective-C-与-Swift），目的在于对平时开发的总结。" class="headerlink" title="1. 关于iOS开发的笔记（Objective-C 与 Swift），目的在于对平时开发的总结。"></a>1. 关于iOS开发的笔记（Objective-C 与 Swift），目的在于对平时开发的总结。</h2><h2 id="2-关于JavaScript的笔记（包括ES6-与-Node-js）。"><a href="#2-关于JavaScript的笔记（包括ES6-与-Node-js）。" class="headerlink" title="2. 关于JavaScript的笔记（包括ES6 与 Node.js）。"></a>2. 关于JavaScript的笔记（包括ES6 与 Node.js）。</h2><h2 id="3-关于Vue与React相关的前端开发（包括React-Native）"><a href="#3-关于Vue与React相关的前端开发（包括React-Native）" class="headerlink" title="3. 关于Vue与React相关的前端开发（包括React Native）"></a>3. 关于Vue与React相关的前端开发（包括React Native）</h2><h2 id="4-关于游戏开发相关的笔记-（Cocos2dx为主，等我把OpenGL-ES的东西看懂了或许再写点这）。"><a href="#4-关于游戏开发相关的笔记-（Cocos2dx为主，等我把OpenGL-ES的东西看懂了或许再写点这）。" class="headerlink" title="4. 关于游戏开发相关的笔记 （Cocos2dx为主，等我把OpenGL ES的东西看懂了或许再写点这）。"></a>4. 关于游戏开发相关的笔记 （Cocos2dx为主，等我把OpenGL ES的东西看懂了或许再写点这）。</h2><hr>
-<p><strong>总共大概就会写关于以上这些方面的东西，因为做游戏是我以前的工作，iOS开发是我现在的工作，做一个大前端开发是我未来的规划！希望大家共勉 共同进步！</strong></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -507,10 +394,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -518,6 +406,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -538,8 +430,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -581,6 +482,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、Node-js与JavaScript的关系"><span class="nav-number">1.</span> <span class="nav-text">一、Node.js与JavaScript的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、CommonJS的模块规范"><span class="nav-number">2.</span> <span class="nav-text">二、CommonJS的模块规范</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-模块的引入和导出（require和exports）"><span class="nav-number">2.1.</span> <span class="nav-text">1.模块的引入和导出（require和exports）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-总结exports和module-exports的区别"><span class="nav-number">2.2.</span> <span class="nav-text">2.总结exports和module.exports的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Node中的模块类型"><span class="nav-number">2.3.</span> <span class="nav-text">3.Node中的模块类型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -721,6 +638,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
