@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、为什么需要异步IO1、用户体验：在浏览器中，JavaScript在单线程中执行而且与UI渲染共享一个线程。这就意味着在执行js脚本的时候UI渲染会是停滞的状态，如果脚本执行时间超过了一段时间，电脑前的用户就会感觉到卡顿。那么如果网页中需要获取一个很大的网络资源，这个时候UI停顿等待加载，可见体验是多么的差。如果采用异步的方式，那么在加载资源期间，用户依然可以与界面UI之间有交互继续响应行为。">
+<meta name="keywords" content="iOS ES6 Node.js Vue React Cocos2dx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js包教不包会 第二课 异步IO与事件驱动">
+<meta property="og:url" content="http://yoursite.com/2019/03/18/Node.js包教不包会 第二课 异步IO与事件驱动/index.html">
+<meta property="og:site_name" content="二狗的故事会">
+<meta property="og:description" content="一、为什么需要异步IO1、用户体验：在浏览器中，JavaScript在单线程中执行而且与UI渲染共享一个线程。这就意味着在执行js脚本的时候UI渲染会是停滞的状态，如果脚本执行时间超过了一段时间，电脑前的用户就会感觉到卡顿。那么如果网页中需要获取一个很大的网络资源，这个时候UI停顿等待加载，可见体验是多么的差。如果采用异步的方式，那么在加载资源期间，用户依然可以与界面UI之间有交互继续响应行为。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E6%B5%81%E7%A8%8B.png">
+<meta property="og:updated_time" content="2019-03-18T13:56:09.913Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node.js包教不包会 第二课 异步IO与事件驱动">
+<meta name="twitter:description" content="一、为什么需要异步IO1、用户体验：在浏览器中，JavaScript在单线程中执行而且与UI渲染共享一个线程。这就意味着在执行js脚本的时候UI渲染会是停滞的状态，如果脚本执行时间超过了一段时间，电脑前的用户就会感觉到卡顿。那么如果网页中需要获取一个很大的网络资源，这个时候UI停顿等待加载，可见体验是多么的差。如果采用异步的方式，那么在加载资源期间，用户依然可以与界面UI之间有交互继续响应行为。">
+<meta name="twitter:image" content="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/18/Node.js包教不包会 第二课 异步IO与事件驱动/">
+
+
+
+
+
+  <title>Node.js包教不包会 第二课 异步IO与事件驱动 | 二狗的故事会</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">二狗的故事会</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/18/Node.js包教不包会 第二课 异步IO与事件驱动/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Young">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二狗的故事会">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Node.js包教不包会 第二课 异步IO与事件驱动</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-18T20:24:37+08:00">
+                2019-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、为什么需要异步IO"><a href="#一、为什么需要异步IO" class="headerlink" title="一、为什么需要异步IO"></a>一、为什么需要异步IO</h1><h3 id="1、用户体验："><a href="#1、用户体验：" class="headerlink" title="1、用户体验："></a>1、用户体验：</h3><p>在浏览器中，JavaScript在单线程中执行而且与UI渲染共享一个线程。这就意味着在执行js脚本的时候UI渲染会是停滞的状态，如果脚本执行时间超过了一段时间，电脑前的用户就会感觉到卡顿。那么如果网页中需要获取一个很大的网络资源，这个时候UI停顿等待加载，可见体验是多么的差。如果采用异步的方式，那么在加载资源期间，用户依然可以与界面UI之间有交互继续响应行为。</p>
+<p>下面是异步的方式执行两个耗时任务 消耗的时间为<strong>MAX(M,N)</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">getData(<span class="string">'from_db'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line"><span class="comment">// 时间为M</span></span><br><span class="line">&#125;);</span><br><span class="line">getData(<span class="string">'from_api'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line"><span class="comment">// 时间为N</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>那么如果采用同步的方式呢？时间为<strong>M+N</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getData(<span class="string">'from_db'</span>)<span class="comment">// M</span></span><br><span class="line">getData(<span class="string">'from_api'</span>)<span class="comment">// N</span></span><br></pre></td></tr></table></figure></p>
+<p>那么如果现在有100个耗时任务需要执行，同步和异步的优劣就会体现的很明显了。Node的流行与它异步IO的特性息息相关，因为IO是昂贵的。<strong>只有后端响应的足够快，前端体验才会足够的好。</strong></p>
+<h3 id="2、资源分配"><a href="#2、资源分配" class="headerlink" title="2、资源分配"></a>2、资源分配</h3><p>现在有两种方式去完成一个需求：</p>
+<ul>
+<li>单线程串行</li>
+<li>多线程并行</li>
+</ul>
+<p>如果创建多线程造成的开销以及线程之间的切换的消耗足够小，那么很明显采用多线程的方式是首选。但是如果业务程度足够复杂，多线程就面临着加锁、状态同步、竞争调度等问题，由于开发人员能力乘次不齐，所以会有各种各样想象不到的问题。<br>单线程串行虽然更接近于我们思考的方式，缺点在于性能太差，尤其是遇到阻塞的情况。</p>
+<p>Node的创造者给出了他的解决方案：利用JavaScript的单线程，远离同步、加锁等繁琐的操作，利用异步IO，远离业务阻塞。</p>
+<p><img src="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt title="异步IO示意图"></p>
+<p>如果是多线程的话 异步IO的操作会更加复杂一些</p>
+<h1 id="二、Node中的异步IO"><a href="#二、Node中的异步IO" class="headerlink" title="二、Node中的异步IO"></a>二、Node中的异步IO</h1><h3 id="1、事件循环"><a href="#1、事件循环" class="headerlink" title="1、事件循环"></a>1、事件循环</h3><p>首先有一个概念需要介绍就是事件池，我个人习惯命名为Message_Center，它的作用就是保存外面传递进来的每一个需要处理的事件。在进程启动的时候Node会创建一个类似于while(true)的循环，每执行一次循环的过程我们可以叫做一个Tick，每个Tick的过程就是检查这个Message_Center中是否有事件待处理，如果有那么就取出事件及其回调函数，执行他们，然后进入下一个Tick。直到这个Message_Center中不再有需要处理的事件，就退出。<br><strong>那么在每个Tick中如何判断是否有事件需要处理呢？</strong><br>事实上每个事件循环中都有一个或者多个观察者，判断是否要处理的过程就是向这些观察者询问的过程。就好像一个酒店的厨房，厨师不停的处理前台打印的菜单。每做完一道菜就去问一问前台还有没有新的单子，如果没有我就下班了。这里前台小妹就是观察者，下的单子就是关联的<strong>回调函数</strong>。如果酒店足够大，就像我们实际处理的业务足够复杂的话，那么就会有多个前台小妹负责下单点菜，也就是说会有多个观察者。一个菜单就是一个事件。观察者和事件之间的关系是一对多的关系。应该没有那么难理解吧？</p>
+<blockquote>
+<p>事件循环是一个典型的生产者 - 消费者模型，异步IO、网络请求等就是事件的生产者，提供了源源不断的事件。</p>
+</blockquote>
+<h3 id="2、请求对象"><a href="#2、请求对象" class="headerlink" title="2、请求对象"></a>2、请求对象</h3><p>在异步IO的过程中会产生一个叫做 请求对象 的重要产物，所有的状态都保存在其中，包括放入Message_Center等待执行的操作以及操作完成之后的回调。整个异步IO的流程可以用以下这张流程图来展示。<br><img src="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E6%B5%81%E7%A8%8B.png" alt title="异步IO示意图"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/13/Node-js包教不包会 第一课 当我们在require的时候到底做了些什么/" rel="next" title="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
+                <i class="fa fa-chevron-left"></i> Node.js包教不包会 第一课 当我们在require的时候到底做了些什么
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Young</p>
+              <p class="site-description motion-element" itemprop="description">富强、民主、文明、和谐、自由、平等、公正、法治、爱国、敬业、诚信、友善。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、为什么需要异步IO"><span class="nav-number">1.</span> <span class="nav-text">一、为什么需要异步IO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、用户体验："><span class="nav-number">1.0.1.</span> <span class="nav-text">1、用户体验：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、资源分配"><span class="nav-number">1.0.2.</span> <span class="nav-text">2、资源分配</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Node中的异步IO"><span class="nav-number">2.</span> <span class="nav-text">二、Node中的异步IO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、事件循环"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、事件循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、请求对象"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、请求对象</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Young</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
