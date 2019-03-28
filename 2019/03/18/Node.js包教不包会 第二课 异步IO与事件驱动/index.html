@@ -89,7 +89,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 <meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E6%B5%81%E7%A8%8B.png">
-<meta property="og:updated_time" content="2019-03-19T12:20:03.189Z">
+<meta property="og:updated_time" content="2019-03-28T12:08:09.960Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js包教不包会 第二课 异步IO与事件驱动">
 <meta name="twitter:description" content="一、为什么需要异步IO1、用户体验：在浏览器中，JavaScript在单线程中执行而且与UI渲染共享一个线程。这就意味着在执行js脚本的时候UI渲染会是停滞的状态，如果脚本执行时间超过了一段时间，电脑前的用户就会感觉到卡顿。那么如果网页中需要获取一个很大的网络资源，这个时候UI停顿等待加载，可见体验是多么的差。如果采用异步的方式，那么在加载资源期间，用户依然可以与界面UI之间有交互继续响应行为。">
@@ -312,11 +312,11 @@
 <li>单线程串行</li>
 <li>多线程并行</li>
 </ul>
-<p>如果创建多线程造成的开销以及线程之间的切换的消耗足够小，那么很明显采用多线程的方式是首选。但是如果业务程度足够复杂，多线程就面临着加锁、状态同步、竞争调度等问题，由于开发人员能力参差不齐，所以会有各种各样想象不到的问题。<br>单线程串行虽然更接近于我们思考的方式，缺点在于性能太差，尤其是遇到阻塞的情况。</p>
+<p>如果创建多线程造成的开销以及线程之间的切换的消耗足够小，那么很明显采用多线程的方式是首选。但是如果业务程度足够复杂，多线程就面临着加锁、状态同步、竞争调度等问题，由于开发人员能力参差不齐，所以会有各种各样想象不到的问题。<br>单线程串行虽然更接近于我们思考的方式，但是缺点在于性能太差，尤其是遇到阻塞的情况。</p>
 <p>Node的创造者给出了他的解决方案：利用JavaScript的单线程，远离同步、加锁等繁琐的操作，利用异步IO，远离业务阻塞。</p>
 <p><img src="http://po7cmcg90.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt title="异步IO示意图"></p>
-<p>如果是多线程的话 异步IO的操作会更加复杂一些</p>
-<h1 id="二、Node中的异步IO"><a href="#二、Node中的异步IO" class="headerlink" title="二、Node中的异步IO"></a>二、Node中的异步IO</h1><h3 id="1、事件循环"><a href="#1、事件循环" class="headerlink" title="1、事件循环"></a>1、事件循环</h3><p>首先有一个概念需要介绍就是事件池，我个人习惯命名为Message_Center，它的作用就是保存外面传递进来的每一个需要处理的事件。在进程启动的时候Node会创建一个类似于while(true)的循环，每执行一次循环的过程我们可以叫做一个Tick，每个Tick的过程就是检查这个Message_Center中是否有事件待处理，如果有那么就取出事件及其回调函数，执行他们，然后进入下一个Tick。直到这个Message_Center中不再有需要处理的事件，就退出。<br><strong>那么在每个Tick中如何判断是否有事件需要处理呢？</strong><br>事实上每个事件循环中都有一个或者多个观察者，判断是否要处理的过程就是向这些观察者询问的过程。就好像一个酒店的厨房，厨师不停的处理前台打印的菜单。每做完一道菜就去问一问前台还有没有新的单子，如果没有我就下班了。这里前台小妹就是观察者，下的单子就是关联的<strong>回调函数</strong>。如果酒店足够大，就像我们实际处理的业务足够复杂的话，那么就会有多个前台小妹负责下单点菜，也就是说会有多个观察者。一个菜单就是一个事件。观察者和事件之间的关系是一对多的关系。应该没有那么难理解吧？</p>
+<p>如果是多线程的话 异步IO的流程会更加复杂一些</p>
+<h1 id="二、Node中的异步IO"><a href="#二、Node中的异步IO" class="headerlink" title="二、Node中的异步IO"></a>二、Node中的异步IO</h1><h3 id="1、事件循环"><a href="#1、事件循环" class="headerlink" title="1、事件循环"></a>1、事件循环</h3><p>首先有一个概念需要介绍就是事件池或者叫线程池，我个人习惯命名为Message_Center，它的作用就是保存外面传递进来的每一个需要处理的事件。在进程启动的时候Node会创建一个类似于while(true)的循环，每执行一次循环的过程我们可以叫做一个Tick，每个Tick的过程就是检查这个Message_Center中是否有事件待处理，如果有那么就取出事件及其回调函数，执行他们，然后进入下一个Tick。直到这个Message_Center中不再有需要处理的事件，就退出。<br><strong>那么在每个Tick中如何判断是否有事件需要处理呢？</strong><br>事实上每个事件循环中都有一个或者多个观察者，判断是否要处理的过程就是向这些观察者询问的过程。就好像一个酒店的厨房，厨师不停的处理前台打印的菜单。每做完一道菜就去问一问前台还有没有新的单子，如果没有我就下班了。这里前台小妹就是观察者，下的单子就是关联的<strong>回调函数</strong>。如果酒店足够大，就像我们实际处理的业务足够复杂的话，那么就会有多个前台小妹负责下单点菜，也就是说会有多个观察者。一个菜单就是一个事件。观察者和事件之间的关系是一对多的关系。应该没有那么难理解吧？</p>
 <blockquote>
 <p>事件循环是一个典型的生产者 - 消费者模型，异步IO、网络请求等就是事件的生产者，提供了源源不断的事件。</p>
 </blockquote>
@@ -354,6 +354,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/28/Node.js包教不包会 第三课 常用模块/" rel="prev" title="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
+                Node.js包教不包会 第一课 当我们在require的时候到底做了些什么 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -430,7 +434,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
