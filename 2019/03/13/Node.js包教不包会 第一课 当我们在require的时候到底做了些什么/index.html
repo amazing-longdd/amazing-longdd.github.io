@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="二狗的故事会">
 <meta property="og:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。持续学习一段时间之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg">
-<meta property="og:updated_time" content="2019-03-18T13:57:00.604Z">
+<meta property="og:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&q-ak=AKIDbzY2dNkb2cWFrXrruFaw9aW0Dp9IhmJZ&q-sign-time=1555682825;1555684625&q-key-time=1555682825;1555684625&q-header-list=&q-url-param-list=&q-signature=c64b1e57a8d0e006297685ce98f44ac94427763d&x-cos-security-token=832aad36a4322157bfdeb77eae15d62b3097692810001">
+<meta property="og:updated_time" content="2019-04-19T14:07:21.035Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
 <meta name="twitter:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。持续学习一段时间之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、">
-<meta name="twitter:image" content="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg">
+<meta name="twitter:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&q-ak=AKIDbzY2dNkb2cWFrXrruFaw9aW0Dp9IhmJZ&q-sign-time=1555682825;1555684625&q-key-time=1555682825;1555684625&q-header-list=&q-url-param-list=&q-signature=c64b1e57a8d0e006297685ce98f44ac94427763d&x-cos-security-token=832aad36a4322157bfdeb77eae15d62b3097692810001">
 
 
 
@@ -305,7 +305,7 @@
         <h1 id="一、Node-js与JavaScript的关系"><a href="#一、Node-js与JavaScript的关系" class="headerlink" title="一、Node.js与JavaScript的关系"></a>一、Node.js与JavaScript的关系</h1><p>刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。持续学习一段时间之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：</p>
 <ol>
 <li>ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、方法、对象等基本要素。</li>
-<li>CommonJS ： 一种新的规范。当HTML5出现之后，js运用范围不仅仅是操作DOM、BOM，因为js自身没有模块系统的概念，也没有文件操作、IO流这些标准API以及数据库的接口。所以CommonJS的出现才使得js能真正的运用在服务器开发。<br><img src="http://po7cmcg90.bkt.clouddn.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.jpg" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></li>
+<li>CommonJS ： 一种新的规范。当HTML5出现之后，js运用范围不仅仅是操作DOM、BOM，因为js自身没有模块系统的概念，也没有文件操作、IO流这些标准API以及数据库的接口。所以CommonJS的出现才使得js能真正的运用在服务器开发。<br><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&amp;q-ak=AKIDbzY2dNkb2cWFrXrruFaw9aW0Dp9IhmJZ&amp;q-sign-time=1555682825;1555684625&amp;q-key-time=1555682825;1555684625&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=c64b1e57a8d0e006297685ce98f44ac94427763d&amp;x-cos-security-token=832aad36a4322157bfdeb77eae15d62b3097692810001" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></li>
 </ol>
 <h1 id="二、CommonJS的模块规范"><a href="#二、CommonJS的模块规范" class="headerlink" title="二、CommonJS的模块规范"></a>二、CommonJS的模块规范</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> math = <span class="built_in">require</span>(<span class="string">'math'</span>);</span><br></pre></td></tr></table></figure>
 <p>这就是最简单的一个模块引用的事例，math变量接受了一个导出的<strong>math</strong>模块</p>
