@@ -462,13 +462,13 @@
 </ul>
 <p>如果创建多线程造成的开销以及线程之间的切换的消耗足够小，那么很明显采用多线程的方式是首选。但是如果业务程度足够复杂，多线程就面临着加锁、状态同步、竞争调度等问题，由于开发人员能力参差不齐，所以会有各种各样想象不到的问题。<br>单线程串行虽然更接近于我们思考的方式，但是缺点在于性能太差，尤其是遇到阻塞的情况。</p>
 <p>Node的创造者给出了他的解决方案：利用JavaScript的单线程，远离同步、加锁等繁琐的操作，利用异步IO，远离业务阻塞。</p>
-<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E6%AD%A5io.png?q-sign-algorithm=sha1&amp;q-ak=AKIDh4MWaC4IQzQzkgTSFP6zBSAzw3A5NJ0N&amp;q-sign-time=1555851477;1555853277&amp;q-key-time=1555851477;1555853277&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=64bc87508af06b2a7e481ecaad6aa86a9a2ee58c&amp;x-cos-security-token=b5d1504fd22ad727391a0554afb9d110ad7a49fc10001" alt title="异步IO示意图"></p>
+<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E6%AD%A5io.png" alt title="异步IO示意图"></p>
 <p>如果是多线程的话 异步IO的流程会更加复杂一些</p>
 <h1 id="二、Node中的异步IO"><a href="#二、Node中的异步IO" class="headerlink" title="二、Node中的异步IO"></a>二、Node中的异步IO</h1><h3 id="1、事件循环"><a href="#1、事件循环" class="headerlink" title="1、事件循环"></a>1、事件循环</h3><p>首先有一个概念需要介绍就是事件池或者叫线程池，我个人习惯命名为Message_Center，它的作用就是保存外面传递进来的每一个需要处理的事件。在进程启动的时候Node会创建一个类似于while(true)的循环，每执行一次循环的过程我们可以叫做一个Tick，每个Tick的过程就是检查这个Message_Center中是否有事件待处理，如果有那么就取出事件及其回调函数，执行他们，然后进入下一个Tick。直到这个Message_Center中不再有需要处理的事件，就退出。<br><strong>那么在每个Tick中如何判断是否有事件需要处理呢？</strong><br>事实上每个事件循环中都有一个或者多个观察者，判断是否要处理的过程就是向这些观察者询问的过程。就好像一个酒店的厨房，厨师不停的处理前台打印的菜单。每做完一道菜就去问一问前台还有没有新的单子，如果没有我就下班了。这里前台小妹就是观察者，下的单子就是关联的<strong>回调函数</strong>。如果酒店足够大，就像我们实际处理的业务足够复杂的话，那么就会有多个前台小妹负责下单点菜，也就是说会有多个观察者。一个菜单就是一个事件。观察者和事件之间的关系是一对多的关系。应该没有那么难理解吧？</p>
 <blockquote>
 <p>事件循环是一个典型的生产者 - 消费者模型，异步IO、网络请求等就是事件的生产者，提供了源源不断的事件。</p>
 </blockquote>
-<h3 id="2、请求对象"><a href="#2、请求对象" class="headerlink" title="2、请求对象"></a>2、请求对象</h3><p>在异步IO的过程中会产生一个叫做 请求对象 的重要产物，所有的状态都保存在其中，包括放入Message_Center等待执行的操作以及操作完成之后的回调。整个异步IO的流程可以用以下这张流程图来展示。<br><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/%E5%AE%8C%E6%95%B4%E5%BC%82%E6%AD%A5io.png?q-sign-algorithm=sha1&amp;q-ak=AKIDYO7T9Y5iBhIYzGZ8Fxertr21uK8MeoGi&amp;q-sign-time=1555851298;1555853098&amp;q-key-time=1555851298;1555853098&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=23d90baa45b3d26a90bac77622da122d986d09ea&amp;x-cos-security-token=a3cbad3804e8c24202d3497d897c4035dbe775ed10001" alt title="完整异步IO"></p>
+<h3 id="2、请求对象"><a href="#2、请求对象" class="headerlink" title="2、请求对象"></a>2、请求对象</h3><p>在异步IO的过程中会产生一个叫做 请求对象 的重要产物，所有的状态都保存在其中，包括放入Message_Center等待执行的操作以及操作完成之后的回调。整个异步IO的流程可以用以下这张流程图来展示。<br><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/%E5%AE%8C%E6%95%B4%E5%BC%82%E6%AD%A5io.png" alt title="完整异步IO"></p>
 
           
         
@@ -593,7 +593,7 @@
 <li>ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、方法、对象等基本要素。</li>
 <li>CommonJS ： 一种新的规范。当HTML5出现之后，js运用范围不仅仅是操作DOM、BOM，因为js自身没有模块系统的概念，也没有文件操作、IO流这些标准API以及数据库的接口。所以CommonJS的出现才使得js能真正的运用在服务器开发。</li>
 </ol>
-<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&amp;q-ak=AKIDLleJTRjzXduJgyPCC54AVI9M6IOIyyPZ&amp;q-sign-time=1555851431;1555853231&amp;q-key-time=1555851431;1555853231&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=246c2041cc321f3606c0b7df5a500fc761f06196&amp;x-cos-security-token=4198e25c3bcf41cfdb90c69b21496c83ea1b941e10001" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></p>
+<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></p>
 <h1 id="二、CommonJS的模块规范"><a href="#二、CommonJS的模块规范" class="headerlink" title="二、CommonJS的模块规范"></a>二、CommonJS的模块规范</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> math = <span class="built_in">require</span>(<span class="string">'math'</span>);</span><br></pre></td></tr></table></figure>
 <p>这就是最简单的一个模块引用的事例，math变量接受了一个导出的<strong>math</strong>模块</p>
 <h2 id="1-模块的引入和导出（require和exports）"><a href="#1-模块的引入和导出（require和exports）" class="headerlink" title="1.模块的引入和导出（require和exports）"></a>1.模块的引入和导出（require和exports）</h2><p><strong>首先要有一个概念 ： 一个文件就是一个模块</strong><br>每一个模块都有：require、exports、module三个变量。exports是module对象的一个属性，同时它也是一个对象。一个模块中有且仅有一个module.exports，如果有多个那后面的则会覆盖前面的。在很多时候一个 js 文件有多个需要暴露的方法或是对象，module.exports 又只能暴露一个，那这个时候就要用到 exports<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exports = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;&#125;</span><br><span class="line"></span><br><span class="line">exports = <span class="built_in">module</span>.exports</span><br></pre></td></tr></table></figure></p>

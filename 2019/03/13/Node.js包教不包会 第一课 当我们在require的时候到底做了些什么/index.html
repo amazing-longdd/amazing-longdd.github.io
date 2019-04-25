@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="二狗的故事会">
 <meta property="og:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。持续学习一段时间之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&q-ak=AKIDLleJTRjzXduJgyPCC54AVI9M6IOIyyPZ&q-sign-time=1555851431;1555853231&q-key-time=1555851431;1555853231&q-header-list=&q-url-param-list=&q-signature=246c2041cc321f3606c0b7df5a500fc761f06196&x-cos-security-token=4198e25c3bcf41cfdb90c69b21496c83ea1b941e10001">
-<meta property="og:updated_time" content="2019-04-21T12:57:23.845Z">
+<meta property="og:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png">
+<meta property="og:updated_time" content="2019-04-25T00:20:37.710Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js包教不包会 第一课 当我们在require的时候到底做了些什么">
 <meta name="twitter:description" content="一、Node.js与JavaScript的关系刚开始学习Node的时候只知道是一个基于Chrome的V8引擎底层实现是C++、依靠事件驱动、非阻塞I/O的Web服务器，可以用JavaScript语言来写后端程序。持续学习一段时间之后，可以说才是真的了解了一些深层次的东西。这里有几个概念要说一下：  ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、">
-<meta name="twitter:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&q-ak=AKIDLleJTRjzXduJgyPCC54AVI9M6IOIyyPZ&q-sign-time=1555851431;1555853231&q-key-time=1555851431;1555853231&q-header-list=&q-url-param-list=&q-signature=246c2041cc321f3606c0b7df5a500fc761f06196&x-cos-security-token=4198e25c3bcf41cfdb90c69b21496c83ea1b941e10001">
+<meta name="twitter:image" content="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png">
 
 
 
@@ -307,7 +307,7 @@
 <li>ECMAScript ： 官方的规范，时间较早，涵盖的范畴较小，只包括了词法、类型、上下文、表达式、方法、对象等基本要素。</li>
 <li>CommonJS ： 一种新的规范。当HTML5出现之后，js运用范围不仅仅是操作DOM、BOM，因为js自身没有模块系统的概念，也没有文件操作、IO流这些标准API以及数据库的接口。所以CommonJS的出现才使得js能真正的运用在服务器开发。</li>
 </ol>
-<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png?q-sign-algorithm=sha1&amp;q-ak=AKIDLleJTRjzXduJgyPCC54AVI9M6IOIyyPZ&amp;q-sign-time=1555851431;1555853231&amp;q-key-time=1555851431;1555853231&amp;q-header-list=&amp;q-url-param-list=&amp;q-signature=246c2041cc321f3606c0b7df5a500fc761f06196&amp;x-cos-security-token=4198e25c3bcf41cfdb90c69b21496c83ea1b941e10001" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></p>
+<p><img src="https://ergou-1259072088.cos.ap-chengdu.myqcloud.com/node%E4%B8%8Ejs%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt title="Node、CommonJS、ECMAScript以及浏览器之间的关系"></p>
 <h1 id="二、CommonJS的模块规范"><a href="#二、CommonJS的模块规范" class="headerlink" title="二、CommonJS的模块规范"></a>二、CommonJS的模块规范</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> math = <span class="built_in">require</span>(<span class="string">'math'</span>);</span><br></pre></td></tr></table></figure>
 <p>这就是最简单的一个模块引用的事例，math变量接受了一个导出的<strong>math</strong>模块</p>
 <h2 id="1-模块的引入和导出（require和exports）"><a href="#1-模块的引入和导出（require和exports）" class="headerlink" title="1.模块的引入和导出（require和exports）"></a>1.模块的引入和导出（require和exports）</h2><p><strong>首先要有一个概念 ： 一个文件就是一个模块</strong><br>每一个模块都有：require、exports、module三个变量。exports是module对象的一个属性，同时它也是一个对象。一个模块中有且仅有一个module.exports，如果有多个那后面的则会覆盖前面的。在很多时候一个 js 文件有多个需要暴露的方法或是对象，module.exports 又只能暴露一个，那这个时候就要用到 exports<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exports = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;&#125;</span><br><span class="line"></span><br><span class="line">exports = <span class="built_in">module</span>.exports</span><br></pre></td></tr></table></figure></p>
